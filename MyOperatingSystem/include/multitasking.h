@@ -96,8 +96,11 @@ class ProcessInfo{
        void setParentProcessID(int parentId);
        void setState(int state);
        void setTableIndex(int i);
-       int getTableIndex();
-       int getState();
+       int getTableIndex(){return tableIndex;}
+       int getPID(){return pid;}
+       int getStateRun(){return state_running;}
+       int getStateWait(){return state_wait;}
+       int getStateTerminated(){return state_terminated;}
        int getParentId(){return parentProcessID;}
        CPUState* getProcessCPUState(){return processCpuState;}
        
@@ -117,11 +120,12 @@ class ProcessInfo{
            ProcessTable();
            ~ProcessTable();
            void addProcessInfo(ProcessInfo* process);
-           void deleteProcessInfo(int index);
-           ProcessInfo* getProcessInfo(int index);
+           void deleteProcessInfo(int pid);
+           ProcessInfo* getProcessInfo(int pid);
 
        private:
-           ProcessInfo* processInfo[256];
+           ProcessInfo* processInfos[256];
+           int currentIndex;
    };
    
    class Task

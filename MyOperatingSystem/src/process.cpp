@@ -1,10 +1,3 @@
-//
-//  process.cpp
-//  OsHW1
-//
-//  Created by Dilara Karakaş on 5.04.2023.
-//
-
 #include <multitasking.h>
 
 using namespace myos;
@@ -242,4 +235,94 @@ CPUState* ProcessManager::Schedule(CPUState* cpuState){
     
     
     return processes[currentProcess]->getCPUState();
+}
+
+
+/*
+ 
+        PROCESS INFO
+ 
+ */
+
+
+ProcessInfo::ProcessInfo(){
+    
+}
+
+ProcessInfo::ProcessInfo(Process* process){
+    pid = process->getId();
+    processCpuState = process->getCPUState();
+    state_running = 0;
+    state_wait = 0;
+    state_terminated = 0;
+}
+
+ProcessInfo::~ProcessInfo(){
+    
+}
+
+void ProcessInfo::setParentProcessID(int parentID){
+    parentProcessID = parentID;
+}
+
+
+void ProcessInfo::setState(int state){
+    if(state == 0){ // State 0 -> Running
+        state_running = 1;
+        state_wait = 0;
+        state_terminated = 0;
+    }
+    else if(state == 1){ // State 1 -> Wait
+        state_running = 0;
+        state_wait = 1;
+        state_terminated = 0;
+    }
+    else if(state = 2){ // State 2 -> terminated;
+        state_running = 0;
+        state_wait = 0;
+        state_terminated = 1;
+    }
+}
+
+void ProcessInfo::setTableIndex(int index){
+    tableIndex = index;
+}
+
+/*
+        PROCESS TABLE
+ */
+
+
+ProcessTable::ProcessTable(){
+    currentIndex = 0;
+}
+
+ProcessTable::~ProcessTable(){
+    
+}
+
+void ProcessTable::addProcessInfo(ProcessInfo* process){
+    processInfos[currentIndex] = process;
+    currentIndex++;
+}
+
+void ProcessTable::deleteProcessInfo(int pid){
+    if(currentIndex == 1){
+        if(processInfos[0]->getPID() == pid){
+            currentIndex--;
+        }
+    }
+    for(int i=0;i<currentIndex;i++){
+        if(processInfos[i]->getPID() == pid){
+            while(i<currentIndex-2){
+                processInfos[i] = processInfos[i+1];
+                i++;
+            }
+            currentIndex = i;
+        }
+    }
+}
+
+ProcessInfo* ProcessTable::getProcessInfo(int index){
+    return processInfos[index];
 }
