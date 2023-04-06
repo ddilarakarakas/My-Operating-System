@@ -42,7 +42,6 @@ namespace myos
    public:
 
        Process();
-       Process(void(*_func)(void*));
        Process(GlobalDescriptorTable* gdt, void(*_func)(void*));
        ~Process();
        inline unsigned long int get(){return id;}
@@ -51,7 +50,7 @@ namespace myos
        CPUState* getCPUState(){return cpustate;}
        void setState(int state);
        void setPC(int PC);
-       int getId();
+       int getId(){return id;}
 
    private:
 
@@ -73,17 +72,17 @@ class ProcessManager{
        inline int getCurrentProcessNum(){return currentProcess;}
        Process* getCurrentProcess();
        CPUState* getCurrentCPUState();
-       bool addTProcess(Process* process);
+       bool addProcess(Process* process);
        void setProcess(int num, Process* process);
        void setCurrentProcess(int _current);
-       Process* getProcess(int index);
+       Process* getProcess(int index,Process* tempProcess);
        int getProcessIdIndex(int id);
-       Process* getProcess_id(int id);
-       void delete_Process(Process* process);
+       Process* getProcess_id(int id,Process* tempProcess);
+       void deleteProcess(Process* process,Process* tempProcess);
        CPUState* Schedule(CPUState* cpustate);
        
    private:
-       Process* process[256];
+       Process* processes[256];
        int processNumber;
        int currentProcess;
 };
