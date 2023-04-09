@@ -10,6 +10,9 @@ using namespace myos::common;
 
  */
 
+Task::Task()
+{}
+
 Task::Task(GlobalDescriptorTable *gdt, Process* process){
     processManager->addProcess(process);
     cpustate = process->getCPUState();
@@ -86,9 +89,9 @@ Task::~Task()
 }
 
 /*
- 
+
         TASK MANAGER
- 
+
  */
 
 TaskManager::TaskManager()

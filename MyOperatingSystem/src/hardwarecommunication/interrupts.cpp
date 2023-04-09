@@ -9,9 +9,6 @@ void printf(char* str);
 void printfHex(uint8_t);
 
 
-
-
-
 InterruptHandler::InterruptHandler(InterruptManager* interruptManager, uint8_t InterruptNumber)
 {
     this->InterruptNumber = InterruptNumber;
@@ -32,21 +29,12 @@ uint32_t InterruptHandler::HandleInterrupt(uint32_t esp)
 
 
 
-
-
-
-
-
-
-
 InterruptManager::GateDescriptor InterruptManager::interruptDescriptorTable[256];
 InterruptManager* InterruptManager::ActiveInterruptManager = 0;
 
 
-
-
 void InterruptManager::SetInterruptDescriptorTableEntry(uint8_t interrupt,
-    uint16_t CodeSegment, void (*handler)(), uint8_t DescriptorPrivilegeLevel, uint8_t DescriptorType)
+                                                        uint16_t CodeSegment, void (*handler)(), uint8_t DescriptorPrivilegeLevel, uint8_t DescriptorType)
 {
     // address of pointer to code segment (relative to global descriptor table)
     // and address of the handler (relative to segment)
@@ -61,10 +49,10 @@ void InterruptManager::SetInterruptDescriptorTableEntry(uint8_t interrupt,
 
 
 InterruptManager::InterruptManager(uint16_t hardwareInterruptOffset, GlobalDescriptorTable* globalDescriptorTable, TaskManager* taskManager)
-    : programmableInterruptControllerMasterCommandPort(0x20),
-      programmableInterruptControllerMasterDataPort(0x21),
-      programmableInterruptControllerSlaveCommandPort(0xA0),
-      programmableInterruptControllerSlaveDataPort(0xA1)
+        : programmableInterruptControllerMasterCommandPort(0x20),
+          programmableInterruptControllerMasterDataPort(0x21),
+          programmableInterruptControllerSlaveCommandPort(0xA0),
+          programmableInterruptControllerSlaveDataPort(0xA1)
 {
     this->taskManager = taskManager;
     this->hardwareInterruptOffset = hardwareInterruptOffset;
@@ -116,8 +104,6 @@ InterruptManager::InterruptManager(uint16_t hardwareInterruptOffset, GlobalDescr
     SetInterruptDescriptorTableEntry(hardwareInterruptOffset + 0x0D, CodeSegment, &HandleInterruptRequest0x0D, 0, IDT_INTERRUPT_GATE);
     SetInterruptDescriptorTableEntry(hardwareInterruptOffset + 0x0E, CodeSegment, &HandleInterruptRequest0x0E, 0, IDT_INTERRUPT_GATE);
     SetInterruptDescriptorTableEntry(hardwareInterruptOffset + 0x0F, CodeSegment, &HandleInterruptRequest0x0F, 0, IDT_INTERRUPT_GATE);
-
-    SetInterruptDescriptorTableEntry(                          0x80, CodeSegment, &HandleInterruptRequest0x80, 0, IDT_INTERRUPT_GATE);
 
     programmableInterruptControllerMasterCommandPort.Write(0x11);
     programmableInterruptControllerSlaveCommandPort.Write(0x11);
@@ -186,9 +172,15 @@ uint32_t InterruptManager::DoHandleInterrupt(uint8_t interrupt, uint32_t esp)
     else if(interrupt != hardwareInterruptOffset)
     {
         printf("UNHANDLED INTERRUPT 0x");
-        printfHex(interrupt);
+        for(int i=0; i<30000; i++)
+        {
+            for(int j=0; j<30000; j++)
+            {
+            }
+        }
+        // printfHex(interrupt);
     }
-    
+
     if(interrupt == hardwareInterruptOffset)
     {
         esp = (uint32_t)taskManager->Schedule((CPUState*)esp);
