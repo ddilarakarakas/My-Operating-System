@@ -294,6 +294,10 @@ extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*multiboot
 {
     printf("Hello World! --- Dilara ---\n");
 
+    /*
+     FORK and EXIT example
+     */
+
     GlobalDescriptorTable gdt;
 
     Process p1, p2;

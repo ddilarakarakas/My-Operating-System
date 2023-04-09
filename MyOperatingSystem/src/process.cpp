@@ -70,16 +70,16 @@ Process::Process(GlobalDescriptorTable* gdt, void(*_func)(void*)){
     cpustate -> esi = 0;
     cpustate -> edi = 0;
     cpustate -> ebp = 0;
-
+    
     /*
     cpustate -> gs = 0;
     cpustate -> fs = 0;
     cpustate -> es = 0;
     cpustate -> ds = 0;
     */
-
+    
     // cpustate -> error = 0;
-
+   
     // cpustate -> esp = ;
     cpustate -> eip = (uint32_t)_func;
     cpustate -> cs = gdt->CodeSegmentSelector();
@@ -109,16 +109,16 @@ bool Process::setCpuState(GlobalDescriptorTable* gdt, void(*f)()){
     cpustate -> esi = 0;
     cpustate -> edi = 0;
     cpustate -> ebp = 0;
-
+    
     /*
     cpustate -> gs = 0;
     cpustate -> fs = 0;
     cpustate -> es = 0;
     cpustate -> ds = 0;
     */
-
+    
     // cpustate -> error = 0;
-
+   
     // cpustate -> esp = ;
     cpustate -> eip = (uint32_t)f;
     cpustate -> cs = gdt->CodeSegmentSelector();
@@ -142,7 +142,7 @@ void Process::setPC(int _PC){
 
 
 ProcessManager::ProcessManager(){
-
+    
 }
 
 ProcessManager::ProcessManager(Process* process){
@@ -151,7 +151,7 @@ ProcessManager::ProcessManager(Process* process){
 }
 
 ProcessManager::~ProcessManager(){
-
+    
 }
 
 Process* ProcessManager::getCurrentProcess(){
@@ -232,10 +232,7 @@ CPUState* ProcessManager::Schedule(CPUState* cpuState){
     }
     else
         currentProcess = 0;
-
-
-
-
+    
     return processes[currentProcess]->getCPUState();
 }
 
@@ -248,7 +245,7 @@ CPUState* ProcessManager::Schedule(CPUState* cpuState){
 
 
 ProcessInfo::ProcessInfo(){
-
+    
 }
 
 ProcessInfo::ProcessInfo(Process* process){
@@ -260,7 +257,7 @@ ProcessInfo::ProcessInfo(Process* process){
 }
 
 ProcessInfo::~ProcessInfo(){
-
+    
 }
 
 void ProcessInfo::setParentProcessID(int parentID){
@@ -300,7 +297,7 @@ ProcessTable::ProcessTable(){
 }
 
 ProcessTable::~ProcessTable(){
-
+    
 }
 
 void ProcessTable::addProcessInfo(ProcessInfo* process){
