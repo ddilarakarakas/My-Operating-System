@@ -7,7 +7,7 @@ using namespace myos::common;
 /*
  
     TASK
- 
+
  */
 
 Task::Task(GlobalDescriptorTable *gdt, Process* process){
@@ -16,10 +16,9 @@ Task::Task(GlobalDescriptorTable *gdt, Process* process){
 }
 
 Task::Task(ProcessManager* processManagerr){
-    Thread t;
     processManager = processManagerr;
     numProcess = processManagerr->getNumProcess();
-    cpustate = processManagerr->getProcess(0,t)->getCPUState();
+    cpustate = processManagerr->getProcess(0)->getCPUState();
 }
 
 Process* Task::getCurrentProcess(){
@@ -27,13 +26,12 @@ Process* Task::getCurrentProcess(){
 }
 
 void Task::deleteProcess(Process* process){
-    Process temp;
-    processManager->deleteProcess(process,temp);
+    processManager->deleteProcess(process);
     numProcess--;
 }
 
 void Task::addProcess(Process* process){
-    processManager->addProcess[process];
+    processManager->addProcess(process);
     numProcess++;
 }
 
@@ -56,7 +54,7 @@ CPUState* Task::Schedule(CPUState* cpustate){
 Task::Task(GlobalDescriptorTable *gdt, void entrypoint())
 {
     cpustate = (CPUState*)(stack + 4096 - sizeof(CPUState));
-    
+
     cpustate -> eax = 0;
     cpustate -> ebx = 0;
     cpustate -> ecx = 0;
@@ -65,22 +63,22 @@ Task::Task(GlobalDescriptorTable *gdt, void entrypoint())
     cpustate -> esi = 0;
     cpustate -> edi = 0;
     cpustate -> ebp = 0;
-    
+
     /*
     cpustate -> gs = 0;
     cpustate -> fs = 0;
     cpustate -> es = 0;
     cpustate -> ds = 0;
     */
-    
+
     // cpustate -> error = 0;
-   
+
     // cpustate -> esp = ;
     cpustate -> eip = (uint32_t)entrypoint;
     cpustate -> cs = gdt->CodeSegmentSelector();
     // cpustate -> ss = ;
     cpustate -> eflags = 0x202;
-    
+
 }
 
 Task::~Task()
@@ -92,7 +90,7 @@ Task::~Task()
         TASK MANAGER
  
  */
-        
+
 TaskManager::TaskManager()
 {
     numTasks = 0;
@@ -115,13 +113,13 @@ CPUState* TaskManager::Schedule(CPUState* cpustate)
 {
     if(numTasks <= 0)
         return cpustate;
-    
+
     if(currentTask >= 0)
         tasks[currentTask]->getCurrentProcess()->setCPUState(cpustate);
-    
+
     if(++currentTask >= numTasks)
         currentTask %= numTasks;
-    
+
     return tasks[currentTask]->processManager->Schedule(cpustate);
 }
 
